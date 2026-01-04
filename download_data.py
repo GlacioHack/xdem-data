@@ -29,7 +29,7 @@ FILEPATHS_NPOLAR = {
 
 }
 
-FILEPATH_IS2 = {"longyearbyen_epc": os.path.join(EXAMPLES_DIRECTORY, "Longyearbyen/EPC_IS2.parquet")}
+FILEPATH_IS2 = {"longyearbyen_epc": os.path.join(EXAMPLES_DIRECTORY, "Longyearbyen/EPC_IS2.gpkg")}
 
 # The URLs for where to find the data.
 URLS = {
@@ -130,8 +130,8 @@ def download_icesat2_examples(overwrite: bool = False):
         "cnf": icesat2.CNF_SURFACE_HIGH,  # Confidence level
         "ats": 20.0,  # Minimum along-track spread
         "cnt": 10,  # Minimum count
-        "t0": "2018-01-01T00:00:00Z",  # Start time
-        "t1": "2022-01-01T00:00:00Z",  # Stop time (to keep it under 300 granules)
+        "t0": "2019-01-01T00:00:00Z",  # Start time
+        "t1": "2021-01-01T00:00:00Z",  # Stop time (to keep it under 300 granules)
     }
     # Request ATL06 subsetting in parallel
     gdf = icesat2.atl06sp(params)
@@ -139,7 +139,7 @@ def download_icesat2_examples(overwrite: bool = False):
     gdf = gdf[gdf["atl06_quality_summary"] == 0]  # Keep very high-confidence data
 
     # Save to file
-    gdf.to_parquet(FILEPATH_IS2["longyearbyen_epc"])
+    gdf.to_file(FILEPATH_IS2["longyearbyen_epc"])
         
 
 if __name__ == "__main__":
