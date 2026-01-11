@@ -3,7 +3,6 @@ import os
 import numpy as np
 import geoutils as gu
 
-
 def generate_gdal_comparison(filepath: str, outdir: str) -> None:
     """Run GDAL's DEMProcessing for all attibutes and save in .tif"""
 
@@ -116,9 +115,18 @@ if __name__ == "__main__":
     # Create output directory if needed
     os.makedirs(outdir, exist_ok=True)
 
-    generate_gdal_comparison(filepath, out_dir)
+    # Generate temporary cropped file
+    TEST_ICROP = (137, 21, 187, 75)
+    filepath_cropped = "data/Longyearbyen/DEM_2009_ref_test.tif"
+    dem = gu.Raster(filepath)
+    dem = dem.icrop(TEST_ICROP)
+    dem.save(filepath_cropped)
+
+    generate_gdal_comparison(filepath_cropped, outdir)
 
     dem = gu.Raster(filepath)
     list_off = [(dem.res[0], dem.res[1]), (10 * dem.res[0], 10 * dem.res[1]), (-1.2 * dem.res[0], -1.2 * dem.res[1])]
     for x_off, y_off in list_off:
-        gdal_reproject_horizontal_shift_samecrs(filepath, x_off, y_off, outdir)
+        gdal_reproject_horizontal_shift_samecrs(filepath_cropped, x_off, y_off, outdir)
+
+    os.remove(filepath_cropped)
