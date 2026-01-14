@@ -163,5 +163,8 @@ def generate_comparison_richdem(dem: gu.Raster,
 if __name__ == "__main__":
     filepath = "data/Longyearbyen/DEM_2009_ref.tif"
     output_dir = "test_data/richdem"
+
+    TEST_ICROP = (137, 21, 187, 75)
     dem = gu.Raster(filepath, load_data=True)
+    dem = dem.icrop(TEST_ICROP)
     generate_comparison_richdem(dem=dem, attribute_dict=attributes_richdem, save_dir=output_dir)
