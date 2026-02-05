@@ -116,7 +116,7 @@ if __name__ == "__main__":
     os.makedirs(outdir, exist_ok=True)
 
     # Generate temporary cropped file
-    TEST_ICROP = (137, 21, 187, 75)
+    TEST_ICROP = (475, 600, 545, 654)
     filepath_cropped = "data/Longyearbyen/DEM_2009_ref_test.tif"
     dem = gu.Raster(filepath)
     dem = dem.icrop(TEST_ICROP)
