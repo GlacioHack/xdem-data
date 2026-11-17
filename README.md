@@ -26,13 +26,13 @@ basis by delineating individual glaciers and ice streams, assigning unique ident
 watersheds, digitizing center-lines, and providing a number of attributes for each glacier mask.
 The second one is derived from orthorectified satellite images acquired from the SPOT-5 and ASTER satellite sensors.
 
-#### EPC_IS.gpkg
+#### EPC_IS2.parquet
 
 This point cloud data comes from NASA National Snow and Ice Data Center Distributed Active Archive Center 
 (NSIDC DAAC) ATLAS/ICESat-2 L3A Land Ice Height dataset (ATL06, Version 7)[^3], 
 measuring land elevation along 40 m segments of ground track, spaced 20 m apart. The data were acquired by
 the Advanced Topographic Laser Altimeter System (ATLAS) and retrieved using the SlideRule[^4] software, over the DEM aera and 
-between 01/01/2019 and 01/01/2021. 
+between October 2018 and September 2026.
 
 ## Giza
 
@@ -59,7 +59,7 @@ it has a 3D CRS information and contains NaN values (due to occlusion).
 
 [^3]: Smith, B., Adusumilli, S., Csathó, B. M., Felikson, D., Fricker, H. A., Gardner, A. S., Holschuh, N., Lee, J., Nilsson, J., Paolo, F., Siegfried, M. R., Sutterley, T. & the ICESat-2 Science Team. (2025). ATLAS/ICESat-2 L3A Land Ice Height. (ATL06, Version 7). 
 Boulder, Colorado USA. NASA National Snow and Ice Data Center Distributed Active Archive Center. [https://doi.org/10.5067/ATLAS/ATL06.007](https://doi.org/10.5067/ATLAS/ATL06.007). 
-Date Accessed 01-22-2026.
+Date Accessed 11-17-2026.
 
 [^4]: Shean et al., (2023). SlideRule: Enabling rapid, scalable, open science for the NASA ICESat-2 mission and beyond. Journal of Open Source Software, 8(81), 4982, [https://doi.org/10.21105/joss.04982](https://doi.org/10.21105/joss.04982)
 
