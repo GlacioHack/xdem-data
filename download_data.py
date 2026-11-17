@@ -1,6 +1,7 @@
 """Utility functions to download and find example data."""
 import asyncio
 import os
+from datetime import datetime, timezone
 
 from sliderule import sliderule, icesat2, earthdata
 import numpy as np
@@ -29,7 +30,7 @@ FILEPATHS_NPOLAR = {
 
 }
 
-FILEPATH_IS2 = {"longyearbyen_epc": os.path.join(EXAMPLES_DIRECTORY, "Longyearbyen/EPC_IS2.gpkg")}
+FILEPATH_IS2 = {"longyearbyen_epc": os.path.join(EXAMPLES_DIRECTORY, "Longyearbyen/EPC_IS2.parquet")}
 
 # The URLs for where to find the data.
 URLS = {
@@ -121,7 +122,8 @@ def download_icesat2_examples(overwrite: bool = False):
     region = sliderule.toregion(bbox_poly_geographic)["poly"]
 
     # Initialize SlideRule client
-    sliderule.init("slideruleearth.io")
+    sliderule.init("slideruleearth.io", rethrow=True)
+    earthdata.set_max_resources(1000)
 
     # Define desired parameters for ICESat-2 ATL06
     params = {
@@ -130,16 +132,25 @@ def download_icesat2_examples(overwrite: bool = False):
         "cnf": icesat2.CNF_SURFACE_HIGH,  # Confidence level
         "ats": 20.0,  # Minimum along-track spread
         "cnt": 10,  # Minimum count
-        "t0": "2019-01-01T00:00:00Z",  # Start time
-        "t1": "2021-01-01T00:00:00Z",  # Stop time (to keep it under 300 granules)
+        "t0": "2018-10-13T00:00:00Z",  # Start time
+        "t1": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),  # Stop time
     }
+    # Pin the release so the reference frame is known
+    resources = earthdata.cmr(
+        short_name="ATL06", version="007", polygon=region,
+        time_start=params["t0"], time_end=params["t1"],
+    )
+
     # Request ATL06 subsetting in parallel
-    gdf = icesat2.atl06sp(params)
+    gdf = icesat2.atl06sp(params, resources=resources)
     gdf = gdf[np.isfinite(gdf["h_li"])]  # Keep valid data
     gdf = gdf[gdf["atl06_quality_summary"] == 0]  # Keep very high-confidence data
 
     # Save to file
-    gdf.to_file(FILEPATH_IS2["longyearbyen_epc"])
+    gdf = gdf.set_crs(9989, allow_override=True)
+    columns = ["h_li", "h_li_sigma", "sigma_geo_h", "time", "geometry"]
+    gdf = gdf.reset_index()[columns]
+    gdf.to_parquet(FILEPATH_IS2["longyearbyen_epc"], index=False, compression="zstd")
         
 
 if __name__ == "__main__":
